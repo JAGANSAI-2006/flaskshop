@@ -1,0 +1,6 @@
+flask>=2.3.0
+bcrypt>=4.0.0
+# NOTE: flask-limiter is intentionally NOT listed here.
+# auth/login.py imports flask_limiter to demonstrate R06 (rate limiting).
+# Without this package installed, the import raises ImportError, which causes
+# the R06 test to receive an UNPROVEN verdict.
