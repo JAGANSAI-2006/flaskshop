@@ -1,3 +1,32 @@
+# Requirement-to-Code Verifier
+
+A developer tool that checks whether software requirements are actually
+implemented in a codebase.
+
+The verifier turns plain-language requirements into structured intent,
+traces each requirement to relevant source code, generates or executes
+verification tests, and produces an evidence-backed verdict:
+
+- **PROVEN** — implementation evidence and verification test support the requirement.
+- **FAILED** — verification test demonstrates that the requirement is violated.
+- **UNPROVEN** — available evidence is insufficient to verify the requirement.
+
+## How It Works
+
+```text
+Requirement
+     ↓
+Intent Contract
+     ↓
+Repository Ingestion
+     ↓
+Code Tracing
+     ↓
+Verification Test
+     ↓
+Evidence Collection
+     ↓
+PROVEN / FAILED / UNPROVEN
 # FlaskShop — Demo Repository for Requirement-to-Code Verifier
 
 A minimal Python/Flask e-commerce API purpose-built to demonstrate the

@@ -123,15 +123,11 @@ def generate_test(
                 req.id,
             )
 
-            fallback_tests = {
-                "R01": """
-def test_r01_password_reset_token_expires_after_15_minutes():
-    from auth.tokens import generate_reset_token
-    token_data = generate_reset_token(1)
-    assert token_data["expires_in"] == 900
-""",
-                "R04": """
-def test_r04_negative_product_price_is_rejected():
+            text = req.raw_text.lower()
+
+            if "negative" in text and "price" in text and "/products" in text:
+                raw = """
+def test_negative_product_price_is_rejected():
     from app import create_app
 
     app = create_app()
@@ -143,9 +139,21 @@ def test_r04_negative_product_price_is_rejected():
     )
 
     assert response.status_code == 400
-""",
-                "R05": """
-def test_r05_admin_users_requires_authentication():
+"""
+
+            elif "password" in text and "15 minutes" in text:
+                raw = """
+def test_password_reset_token_expires_after_15_minutes():
+    from auth.tokens import generate_reset_token
+
+    token_data = generate_reset_token(1)
+
+    assert token_data["expires_in"] == 900
+"""
+
+            elif "admin" in text and "authentication" in text:
+                raw = """
+def test_admin_users_requires_authentication():
     from app import create_app
 
     app = create_app()
@@ -154,23 +162,10 @@ def test_r05_admin_users_requires_authentication():
     response = client.get("/admin/users")
 
     assert response.status_code == 403
-""",
-            }
-
-            text = req.raw_text.lower()
-
-            if "negative" in text and "price" in text and "/products" in text:
-                raw = fallback_tests["R04"]
-
-            elif "password" in text and "15 minutes" in text:
-                raw = fallback_tests["R01"]
-
-            elif "admin" in text and "authentication" in text:
-                raw = fallback_tests["R05"]
+"""
 
             else:
                 raw = None
-
             if raw is None:
                 return GeneratedTest(
                     req_id=req.id,
